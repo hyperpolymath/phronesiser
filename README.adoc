@@ -1,0 +1,45 @@
+// SPDX-License-Identifier: PMPL-1.0-or-later
+// Copyright (c) 2026 Jonathan D.A. Jewell (hyperpolymath) <j.d.a.jewell@open.ac.uk>
+= Phronesiser
+Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
+:toc: left
+:icons: font
+
+== What Is This?
+
+Phronesiser adds **provably safe ethical constraints** to AI agent decision-making —
+combining symbolic logic proofs with neural network adaptability.
+
+Phronesis (Greek: practical wisdom) is a neuro-symbolic language for ethical
+reasoning on the BEAM VM. Phronesiser wraps existing AI agents in ethical guardrails.
+
+== How It Works
+
+Define ethical constraints in `phronesiser.toml`. Phronesiser:
+
+1. Generates Phronesis ethical reasoning modules for your AI agents
+2. Symbolic logic proves safety properties ("never recommend action X")
+3. Neural components handle nuanced judgment calls
+4. BEAM supervision trees provide fault-tolerant execution
+5. Every decision is auditable with formal justification
+
+== Key Value
+
+* **Provably safe AI decisions** — not just guidelines, formal proofs
+* **Ethical guardrails** that are mathematically enforced
+* **Neurosymbolic** — symbolic certainty + neural flexibility
+* **Fault-tolerant** — BEAM VM supervision means ethics never crash
+
+== Architecture
+
+Follows the hyperpolymath -iser pattern:
+manifest -> Idris2 ABI proof -> Zig FFI bridge -> target language codegen.
+Part of the https://github.com/hyperpolymath/iseriser[-iser family].
+
+== Status
+
+**Pre-alpha.** Architecture defined, scaffolding in place, codegen pending.
+
+== License
+
+SPDX-License-Identifier: PMPL-1.0-or-later
