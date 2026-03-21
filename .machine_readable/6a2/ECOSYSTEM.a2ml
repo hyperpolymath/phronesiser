@@ -6,13 +6,14 @@
   (version "0.1.0")
   (name "phronesiser")
   (type "tool")
-  (purpose "Add provably safe ethical constraints to AI agents")
+  (purpose "Add provably safe ethical constraints to AI agents via Phronesis deontic logic")
 
   (position-in-ecosystem
     (family "-iser acceleration frameworks")
     (meta-framework "iseriser")
     (relationship "sibling")
-    (top-3 ("typedqliser" "chapeliser" "verisimiser")))
+    (domain "AI safety and ethics — deontic constraint enforcement")
+    (unique-value "Only -iser that provides formal ethical guarantees via deontic logic proofs"))
 
   (related-projects
     (project "iseriser"
@@ -27,12 +28,21 @@
     (project "verisimiser"
       (relationship "sibling-priority-3")
       (description "VeriSimDB octad database augmentation"))
-    (project "squeakwell"
-      (relationship "sibling")
-      (description "Database recovery via constraint propagation"))
+    (project "phronesis"
+      (relationship "upstream-language")
+      (description "Nextgen language for ethical reasoning on the BEAM VM — phronesiser makes it accessible"))
     (project "proven"
       (relationship "dependency")
-      (description "Shared Idris2 verified library"))
+      (description "Shared Idris2 verified library — may share deontic logic proof modules"))
     (project "typell"
       (relationship "dependency")
-      (description "Type theory engine"))))
+      (description "Type theory engine"))
+    (project "boj-server"
+      (relationship "integration-target")
+      (description "MCP server — phronesiser cartridge for constraint management"))
+    (project "verisimdb"
+      (relationship "integration-target")
+      (description "Backing store for audit trail persistence"))
+    (project "panll"
+      (relationship "integration-target")
+      (description "Panel framework — constraint visualisation and editing panels"))))

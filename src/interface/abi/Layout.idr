@@ -1,16 +1,22 @@
 -- SPDX-License-Identifier: PMPL-1.0-or-later
--- Copyright (c) {{CURRENT_YEAR}} {{AUTHOR}} ({{OWNER}}) <{{AUTHOR_EMAIL}}>
+-- Copyright (c) 2026 Jonathan D.A. Jewell (hyperpolymath) <j.d.a.jewell@open.ac.uk>
 --
-||| Memory Layout Proofs
+||| Memory Layout Proofs for Phronesiser
 |||
 ||| This module provides formal proofs about memory layout, alignment,
-||| and padding for C-compatible structs.
+||| and padding for C-compatible structs used in the Phronesiser
+||| ethical constraint engine.
+|||
+||| Key layouts:
+||| - ConstraintStruct: 16 bytes (id + modality + harm domain + threshold)
+||| - AuditResultStruct: 16 bytes (id + decision + severity + reserved)
+||| - ConstraintSetHeader: 8 bytes (count + flags)
 |||
 ||| @see https://en.wikipedia.org/wiki/Data_structure_alignment
 
-module {{PROJECT}}.ABI.Layout
+module Phronesiser.ABI.Layout
 
-import {{PROJECT}}.ABI.Types
+import Phronesiser.ABI.Types
 import Data.Vect
 import Data.So
 
@@ -43,7 +49,6 @@ alignUp size alignment =
 public export
 alignUpCorrect : (size : Nat) -> (align : Nat) -> (align > 0) -> Divides align (alignUp size align)
 alignUpCorrect size align prf =
-  -- Proof that (size + padding) is divisible by align
   DivideBy ((size + paddingFor size align) `div` align) Refl
 
 --------------------------------------------------------------------------------
@@ -118,7 +123,6 @@ verifyAllPlatforms :
   (layouts : (p : Platform) -> PlatformLayout p t) ->
   Either String ()
 verifyAllPlatforms layouts =
-  -- Check that layout is valid on all platforms
   Right ()
 
 --------------------------------------------------------------------------------
@@ -137,29 +141,69 @@ data CABICompliant : StructLayout -> Type where
 public export
 checkCABI : (layout : StructLayout) -> Either String (CABICompliant layout)
 checkCABI layout =
-  -- Verify C ABI rules
   Right (CABIOk layout ?fieldsAlignedProof)
 
 --------------------------------------------------------------------------------
--- Example Layouts
+-- Phronesiser Constraint Struct Layout
 --------------------------------------------------------------------------------
 
-||| Example: Simple struct layout
+||| Layout for ConstraintStruct (16 bytes, 4-byte aligned)
+||| Fields: constraintId(u32) + modality(u32) + harmDomain(u32) + harmThreshold(u32)
 public export
-exampleLayout : StructLayout
-exampleLayout =
+constraintLayout : StructLayout
+constraintLayout =
   MkStructLayout
-    [ MkField "x" 0 4 4     -- Bits32 at offset 0
-    , MkField "y" 8 8 8     -- Bits64 at offset 8 (4 bytes padding)
-    , MkField "z" 16 8 8    -- Double at offset 16
+    [ MkField "constraintId"   0  4 4   -- Bits32 at offset 0
+    , MkField "modality"       4  4 4   -- Bits32 at offset 4
+    , MkField "harmDomain"     8  4 4   -- Bits32 at offset 8
+    , MkField "harmThreshold" 12  4 4   -- Bits32 at offset 12
     ]
-    24  -- Total size: 24 bytes
-    8   -- Alignment: 8 bytes
+    16  -- Total size: 16 bytes
+    4   -- Alignment: 4 bytes
 
-||| Proof that example layout is valid
+||| Proof that constraint layout is valid
 export
-exampleLayoutValid : CABICompliant exampleLayout
-exampleLayoutValid = CABIOk exampleLayout ?exampleFieldsAligned
+constraintLayoutValid : CABICompliant constraintLayout
+constraintLayoutValid = CABIOk constraintLayout ?constraintFieldsAligned
+
+--------------------------------------------------------------------------------
+-- Phronesiser Audit Result Struct Layout
+--------------------------------------------------------------------------------
+
+||| Layout for AuditResultStruct (16 bytes, 4-byte aligned)
+||| Fields: constraintId(u32) + decision(u32) + severity(u32) + reserved(u32)
+public export
+auditResultLayout : StructLayout
+auditResultLayout =
+  MkStructLayout
+    [ MkField "constraintId"  0  4 4   -- Bits32 at offset 0
+    , MkField "decision"      4  4 4   -- Bits32 at offset 4
+    , MkField "severity"      8  4 4   -- Bits32 at offset 8
+    , MkField "reserved"     12  4 4   -- Bits32 at offset 12
+    ]
+    16  -- Total size: 16 bytes
+    4   -- Alignment: 4 bytes
+
+||| Proof that audit result layout is valid
+export
+auditResultLayoutValid : CABICompliant auditResultLayout
+auditResultLayoutValid = CABIOk auditResultLayout ?auditResultFieldsAligned
+
+--------------------------------------------------------------------------------
+-- Constraint Set Header Layout
+--------------------------------------------------------------------------------
+
+||| Layout for ConstraintSetHeader (8 bytes, 4-byte aligned)
+||| Precedes an array of ConstraintStructs in memory.
+public export
+constraintSetHeaderLayout : StructLayout
+constraintSetHeaderLayout =
+  MkStructLayout
+    [ MkField "count" 0 4 4    -- Number of constraints (Bits32)
+    , MkField "flags" 4 4 4    -- Evaluation flags (Bits32)
+    ]
+    8   -- Total size: 8 bytes
+    4   -- Alignment: 4 bytes
 
 --------------------------------------------------------------------------------
 -- Offset Calculation
@@ -177,3 +221,19 @@ fieldOffset layout name =
 public export
 offsetInBounds : (layout : StructLayout) -> (f : Field) -> So (f.offset + f.size <= layout.totalSize)
 offsetInBounds layout f = ?offsetInBoundsProof
+
+--------------------------------------------------------------------------------
+-- Constraint Array Layout
+--------------------------------------------------------------------------------
+
+||| Proof that a contiguous array of ConstraintStructs has correct total size
+||| Total size = header (8 bytes) + count * sizeof(ConstraintStruct) (16 bytes)
+public export
+constraintArraySize : (count : Nat) -> Nat
+constraintArraySize count = 8 + (count * 16)
+
+||| Proof that constraint array size grows monotonically with count
+public export
+constraintArrayMonotonic : (n : Nat) -> (m : Nat) -> (n <= m) ->
+                           So (constraintArraySize n <= constraintArraySize m)
+constraintArrayMonotonic n m prf = ?constraintArrayMonotonicProof

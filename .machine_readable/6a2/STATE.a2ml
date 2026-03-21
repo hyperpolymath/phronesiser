@@ -5,31 +5,34 @@
 (state
   (metadata
     (version "0.1.0")
-    (last-updated "2026-03-20")
+    (last-updated "2026-03-21")
     (author "Jonathan D.A. Jewell"))
 
   (project-context
     (name "phronesiser")
-    (description "Add provably safe ethical constraints to AI agents")
-    (status "scaffold")
+    (description "Provably safe ethical constraints for AI agents via Phronesis deontic logic")
+    (status "scaffold-documented")
     (priority "—")
     (ecosystem "-iser family (https://github.com/hyperpolymath/iseriser)"))
 
   (current-position
-    (phase "initial-scaffold")
-    (completion-percentage 5)
-    (milestone "Architecture defined, CLI scaffolded, RSR template complete"))
+    (phase "scaffold-documented")
+    (completion-percentage 15)
+    (milestone "Architecture defined, CLI scaffolded, RSR template complete, ABI/FFI types bespoke, documentation complete"))
 
   (route-to-mvp
-    (step 1 "Replace codegen stubs with target-language-specific generation")
-    (step 2 "Implement Idris2 ABI proofs for core invariants")
-    (step 3 "Build Zig FFI bridge")
-    (step 4 "Integration tests with real-world examples")
-    (step 5 "Documentation and examples"))
+    (step 1 "Implement Phronesis constraint compilation from TOML to deontic propositions")
+    (step 2 "Complete Idris2 ABI proofs: DeonticModality soundness, NoContradiction, AuditDecision completeness")
+    (step 3 "Complete Zig FFI constraint evaluation engine (beyond stub)")
+    (step 4 "End-to-end example: AI agent with obligation/prohibition guardrails")
+    (step 5 "Constraint conflict detection (obligation vs prohibition on same scope)")
+    (step 6 "Audit trail generation with structured JSON output")
+    (step 7 "Integration tests with real-world constraint sets"))
 
   (blockers-and-issues
-    (none "Project is in scaffold phase — no blockers yet"))
+    (none "Project is in scaffold-documented phase — no blockers yet"))
 
   (critical-next-actions
-    (action "Implement codegen for primary use case")
-    (action "Write first working example end-to-end")))
+    (action "Implement TOML-to-deontic-proposition constraint compiler in codegen/mod.rs")
+    (action "Define phronesiser.toml schema for obligations, permissions, prohibitions, harm boundaries")
+    (action "Write first end-to-end example: content moderation constraint set")))

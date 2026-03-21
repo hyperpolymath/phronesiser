@@ -7,7 +7,7 @@ authors = ["Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>"]
 description = "Add provably safe ethical constraints to AI agent decision-making via Phronesis"
 license = "PMPL-1.0-or-later"
 repository = "https://github.com/hyperpolymath/phronesiser"
-keywords = ["phrones", "acceleration", "code-generation"]
+keywords = ["ethics", "deontic-logic", "ai-safety", "constraints", "formal-verification"]
 categories = ["command-line-utilities", "development-tools"]
 
 [dependencies]
