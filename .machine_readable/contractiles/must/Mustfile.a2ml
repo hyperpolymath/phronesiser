@@ -67,3 +67,7 @@ These are hard requirements — CI fails if any check fails.
 - description: No Admitted in Coq code
 - run: "! grep -r 'Admitted' --include='*.v' . 2>/dev/null | grep -v node_modules | head -1 | grep -q ."
 - severity: critical
+
+## Domain-Specific Constraints (phronesiser)
+
+### deontic-soundness\n- description: Ethical constraint proofs must be formally verified\n- target: Idris2 proofs of obligation/permission/prohibition consistency\n- severity: critical\n\n### no-constraint-bypass\n- description: AI agents cannot bypass ethical constraints at runtime\n- target: Constraints enforced at type level, not runtime checks\n- severity: critical\n\n### audit-explainability\n- description: Every constraint decision must produce human-readable explanation\n- target: Provenance trace from deontic rule to decision\n- severity: critical

@@ -11,28 +11,30 @@
   (project-context
     (name "phronesiser")
     (description "Provably safe ethical constraints for AI agents via Phronesis deontic logic")
-    (status "scaffold-documented")
+    (status "phase-1-complete")
     (priority "—")
-    (ecosystem "-iser family (https://github.com/hyperpolymath/iseriser)"))
+    (ecosystem "-iser family (https://github.com/hyperpolymath/iseriser)")
+    (domain "Ethical AI constraint verification"))
 
   (current-position
-    (phase "scaffold-documented")
-    (completion-percentage 15)
-    (milestone "Architecture defined, CLI scaffolded, RSR template complete, ABI/FFI types bespoke, documentation complete"))
+    (phase "phase-1-complete")
+    (completion-percentage 45)
+    (milestone "Phase 1 complete — scaffold, CLI, manifest parser, codegen stubs, ABI types, RSR template"))
 
   (route-to-mvp
-    (step 1 "Implement Phronesis constraint compilation from TOML to deontic propositions")
-    (step 2 "Complete Idris2 ABI proofs: DeonticModality soundness, NoContradiction, AuditDecision completeness")
-    (step 3 "Complete Zig FFI constraint evaluation engine (beyond stub)")
-    (step 4 "End-to-end example: AI agent with obligation/prohibition guardrails")
-    (step 5 "Constraint conflict detection (obligation vs prohibition on same scope)")
-    (step 6 "Audit trail generation with structured JSON output")
-    (step 7 "Integration tests with real-world constraint sets"))
+    (step 1 "Phase 1 — scaffold, CLI, manifest parser, ABI types [COMPLETE]")
+    (step 2 "Phase 2 — core domain logic implementation")
+    (step 3 "Phase 3 — Idris2 ABI formal proofs")
+    (step 4 "Phase 4 — Zig FFI bridge implementation")
+    (step 5 "Phase 5 — integration tests with real targets")
+    (step 6 "Phase 6 — documentation and examples")
+    (step 7 "Phase 7 — Chainguard container + CI hardening")
+    (step 8 "Phase 8 — first release (v0.1.0)"))
 
   (blockers-and-issues
-    (none "Project is in scaffold-documented phase — no blockers yet"))
+    (none "No blockers — Phase 1 complete, ready for Phase 2"))
 
   (critical-next-actions
-    (action "Implement TOML-to-deontic-proposition constraint compiler in codegen/mod.rs")
-    (action "Define phronesiser.toml schema for obligations, permissions, prohibitions, harm boundaries")
-    (action "Write first end-to-end example: content moderation constraint set")))
+    (action "Begin Phase 2 — implement core domain logic for phronesiser")
+    (action "Write property-based tests for manifest parsing")
+    (action "Define Idris2 ABI proof obligations for Phase 3")))
