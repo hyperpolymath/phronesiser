@@ -213,18 +213,18 @@ fn evaluate_condition(
     // "not <key>" form
     if let Some(key) = cond.strip_prefix("not ") {
         let key = key.trim();
-        return context.get(key).map_or(true, |v| v != "true");
+        return context.get(key).is_none_or(|v| v != "true");
     }
 
     // "key = value" form
     if let Some((key, value)) = cond.split_once('=') {
         let key = key.trim();
         let value = value.trim();
-        return context.get(key).map_or(false, |v| v == value);
+        return context.get(key).is_some_and(|v| v == value);
     }
 
     // Simple key presence: true if context[key] == "true"
-    context.get(cond).map_or(false, |v| v == "true")
+    context.get(cond).is_some_and(|v| v == "true")
 }
 
 /// Return the more restrictive of two decisions.
@@ -266,8 +266,7 @@ mod tests {
 
     #[test]
     fn test_no_matching_constraints_permits() {
-        let engine =
-            ConstraintEngine::new(vec![], EnforcementMode::Strict, 100);
+        let engine = ConstraintEngine::new(vec![], EnforcementMode::Strict, 100);
         let action = AgentAction {
             agent_name: "bot".into(),
             action: "read".into(),
@@ -456,8 +455,7 @@ mod tests {
             EnforcementMode::Strict,
             100,
         );
-        let unfulfilled =
-            engine.check_unfulfilled_obligations("agent", &[], &HashMap::new());
+        let unfulfilled = engine.check_unfulfilled_obligations("agent", &[], &HashMap::new());
         assert_eq!(unfulfilled.len(), 1);
         assert!(unfulfilled[0].contains("must-log"));
 

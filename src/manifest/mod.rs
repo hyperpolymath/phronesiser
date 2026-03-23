@@ -48,17 +48,13 @@ impl fmt::Display for ConstraintKind {
 /// - **Advisory**: Violations are logged but the action proceeds.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "lowercase")]
+#[derive(Default)]
 pub enum EnforcementMode {
     /// Actions that violate constraints are denied outright.
+    #[default]
     Strict,
     /// Violations are logged as warnings; the action is still permitted.
     Advisory,
-}
-
-impl Default for EnforcementMode {
-    fn default() -> Self {
-        EnforcementMode::Strict
-    }
 }
 
 impl fmt::Display for EnforcementMode {
@@ -186,7 +182,10 @@ pub struct EnforcementConfig {
     /// The priority threshold at which a violation triggers escalation instead
     /// of a simple deny. Constraints with `priority >= escalation_threshold`
     /// produce an `Escalated` decision rather than `Denied`.
-    #[serde(default = "default_escalation_threshold", rename = "escalation-threshold")]
+    #[serde(
+        default = "default_escalation_threshold",
+        rename = "escalation-threshold"
+    )]
     pub escalation_threshold: i32,
 
     /// Whether to produce a structured audit log of every evaluation.
@@ -311,7 +310,11 @@ pub fn validate(manifest: &Manifest) -> Result<()> {
             anyhow::bail!("duplicate constraint name: '{}'", constraint.name);
         }
         if constraint.subject.is_empty() {
-            anyhow::bail!("constraints[{}] '{}': subject is required", idx, constraint.name);
+            anyhow::bail!(
+                "constraints[{}] '{}': subject is required",
+                idx,
+                constraint.name
+            );
         }
         if constraint.action.is_empty() {
             anyhow::bail!(
@@ -415,10 +418,7 @@ pub fn print_info(m: &Manifest) {
 
     println!("\nConstraints ({}):", m.constraints.len());
     for c in &m.constraints {
-        let cond = c
-            .condition
-            .as_deref()
-            .unwrap_or("(unconditional)");
+        let cond = c.condition.as_deref().unwrap_or("(unconditional)");
         println!(
             "  - [{}] {} | subject={} action={} condition={} priority={}",
             c.kind, c.name, c.subject, c.action, cond, c.priority
@@ -431,7 +431,10 @@ pub fn print_info(m: &Manifest) {
         println!("Entry: {}", m.workload.entry);
     }
     if !m.data.input_type.is_empty() {
-        println!("Input: {} -> Output: {}", m.data.input_type, m.data.output_type);
+        println!(
+            "Input: {} -> Output: {}",
+            m.data.input_type, m.data.output_type
+        );
     }
 }
 

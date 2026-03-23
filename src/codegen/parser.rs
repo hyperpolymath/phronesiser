@@ -9,7 +9,7 @@
 // 2. Validate deontic logic consistency (detect contradictions).
 // 3. Sort constraints by priority for deterministic evaluation order.
 
-use anyhow::{bail, Result};
+use anyhow::{Result, bail};
 
 use crate::abi;
 use crate::manifest::Manifest;
@@ -69,8 +69,13 @@ fn detect_contradictions(constraints: &[abi::Constraint]) -> Result<()> {
             if a.subject == b.subject && a.action == b.action && a.priority == b.priority {
                 let contradicts = matches!(
                     (&a.modality, &b.modality),
-                    (abi::DeonticModality::Obligation, abi::DeonticModality::Prohibition)
-                        | (abi::DeonticModality::Prohibition, abi::DeonticModality::Obligation)
+                    (
+                        abi::DeonticModality::Obligation,
+                        abi::DeonticModality::Prohibition
+                    ) | (
+                        abi::DeonticModality::Prohibition,
+                        abi::DeonticModality::Obligation
+                    )
                 );
                 if contradicts {
                     bail!(

@@ -168,10 +168,7 @@ fn test_full_pipeline_escalation() {
     };
     let result = engine.evaluate(&action);
     assert_eq!(result.decision, AuditDecision::Escalated);
-    assert!(result
-        .reasoning
-        .iter()
-        .any(|r| r.contains("escalating")));
+    assert!(result.reasoning.iter().any(|r| r.contains("escalating")));
 }
 
 // ---------------------------------------------------------------------------
@@ -292,10 +289,12 @@ fn test_multiple_constraints_priority_resolution() {
     };
     let log_result = engine.evaluate(&log_action);
     assert_eq!(log_result.decision, AuditDecision::Permitted);
-    assert!(log_result
-        .reasoning
-        .iter()
-        .any(|r| r.contains("OBLIGATION")));
+    assert!(
+        log_result
+            .reasoning
+            .iter()
+            .any(|r| r.contains("OBLIGATION"))
+    );
 
     // Delete is denied
     let delete_action = AgentAction {
@@ -430,8 +429,7 @@ fn test_audit_trail_json_roundtrip() {
 
     // Serialize to JSON and back
     let json = trail.to_json().unwrap();
-    let deserialized: Vec<phronesiser::EvaluationResult> =
-        serde_json::from_str(&json).unwrap();
+    let deserialized: Vec<phronesiser::EvaluationResult> = serde_json::from_str(&json).unwrap();
     assert_eq!(deserialized.len(), 3);
     assert_eq!(deserialized[0].decision, AuditDecision::Denied);
     assert_eq!(deserialized[1].decision, AuditDecision::Permitted);
@@ -485,14 +483,12 @@ capabilities = ["good-action"]
     assert!(output_dir.join("README.txt").exists());
 
     // Verify constraints.json content
-    let constraints_json =
-        std::fs::read_to_string(output_dir.join("constraints.json")).unwrap();
+    let constraints_json = std::fs::read_to_string(output_dir.join("constraints.json")).unwrap();
     assert!(constraints_json.contains("c1"));
     assert!(constraints_json.contains("Prohibition"));
 
     // Verify engine_config.json content
-    let config_json =
-        std::fs::read_to_string(output_dir.join("engine_config.json")).unwrap();
+    let config_json = std::fs::read_to_string(output_dir.join("engine_config.json")).unwrap();
     assert!(config_json.contains("gen-agent"));
     assert!(config_json.contains("strict"));
 }

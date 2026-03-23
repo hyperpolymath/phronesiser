@@ -69,12 +69,12 @@ impl AuditTrail {
     /// Creates parent directories if they do not exist.
     pub fn write_json(&self, path: &str) -> Result<()> {
         if let Some(parent) = Path::new(path).parent() {
-            fs::create_dir_all(parent)
-                .with_context(|| format!("Failed to create audit log directory: {}", parent.display()))?;
+            fs::create_dir_all(parent).with_context(|| {
+                format!("Failed to create audit log directory: {}", parent.display())
+            })?;
         }
         let json = self.to_json()?;
-        fs::write(path, &json)
-            .with_context(|| format!("Failed to write audit log: {}", path))?;
+        fs::write(path, &json).with_context(|| format!("Failed to write audit log: {}", path))?;
         Ok(())
     }
 
