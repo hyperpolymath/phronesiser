@@ -1,63 +1,27 @@
-;; SPDX-License-Identifier: PMPL-1.0-or-later
-;; Copyright (c) 2026 Jonathan D.A. Jewell (hyperpolymath) <j.d.a.jewell@open.ac.uk>
-;; META.a2ml — Meta-level information for phronesiser
+# SPDX-License-Identifier: PMPL-1.0-or-later
+# Copyright (c) 2026 Jonathan D.A. Jewell (hyperpolymath) <j.d.a.jewell@open.ac.uk>
+#
+# META.a2ml — Phronesiser meta-level information
+[metadata]
+version = "0.1.0"
+last-updated = "2026-03-21"
 
-(meta
-  (version "0.1.0")
-  (last-updated "2026-03-21")
+[project-info]
+license = "PMPL-1.0-or-later"
+author = "Jonathan D.A. Jewell (hyperpolymath)"
 
-  (architecture-decisions
-    (adr "001-iser-pattern"
-      (status "accepted")
-      (context "Need to make Phronesis ethical reasoning accessible without learning deontic logic")
-      (decision "Use manifest-driven code generation: user describes ethical constraints in TOML, phronesiser generates formally verified guardrails")
-      (consequences "Users write zero Phronesis code; all deontic logic complexity hidden in the -iser"))
+[architecture-decisions]
+decisions = [
+  # No ADRs recorded
+]
 
-    (adr "002-abi-ffi-standard"
-      (status "accepted")
-      (context "Need verified interop between Rust CLI, Phronesis constraint engine, and user agents")
-      (decision "Idris2 ABI for formal proofs of constraint soundness, Zig FFI for C-ABI constraint evaluation bridge")
-      (consequences "Compile-time guarantees that obligation/prohibition sets are non-contradictory; zero runtime overhead"))
+[development-practices]
+versioning = "SemVer"
+documentation = "AsciiDoc"
+build-tool = "just"
 
-    (adr "003-deontic-logic-model"
-      (status "accepted")
-      (context "Need formal model for ethical constraints that is both rigorous and practical")
-      (decision "Use standard deontic logic: Obligation (must), Permission (may), Prohibition (must-not)")
-      (consequences "Well-studied formal system; decidable evaluation; clear audit trail semantics"))
-
-    (adr "004-audit-decision-trichotomy"
-      (status "accepted")
-      (context "Every agent action must produce exactly one auditable decision")
-      (decision "Three-outcome model: Permitted (proof of safety), Denied (proof of violation), Escalated (ambiguity)")
-      (consequences "No silent failures; human oversight for genuinely ambiguous cases; complete audit trail"))
-
-    (adr "005-harm-prevention-taxonomy"
-      (status "accepted")
-      (context "Need structured harm classification for constraint severity")
-      (decision "Six harm domains (physical, psychological, financial, privacy, reputational, environmental) x five severity levels (negligible through critical)")
-      (consequences "Granular enforcement; severity-proportional responses; domains extensible"))
-
-    (adr "006-rsr-template"
-      (status "accepted")
-      (context "Need consistent project structure across 29+ -iser repos")
-      (decision "All repos cloned from rsr-template-repo with full CI/CD and governance")
-      (consequences "17 workflows, SECURITY.md, CONTRIBUTING, bot directives from day one")))
-
-  (development-practices
-    (language "Rust" (purpose "CLI orchestration and manifest parsing"))
-    (language "Idris2" (purpose "ABI formal proofs — deontic soundness, constraint non-contradiction"))
-    (language "Zig" (purpose "FFI C-ABI bridge — constraint evaluation engine"))
-    (build-tool "cargo")
-    (ci "GitHub Actions (17 workflows)"))
-
-  (design-rationale
-    (principle "Deontic soundness"
-      (explanation "Obligation and prohibition must never apply to the same scope — proven at compile time via Idris2"))
-    (principle "Audit completeness"
-      (explanation "Every evaluated action produces exactly one AuditDecision — no silent failures"))
-    (principle "Severity-proportional enforcement"
-      (explanation "Harm severity determines response: negligible=log, minor=warn, moderate=require-permission, severe=block, critical=immediate-deny"))
-    (principle "Manifest-driven"
-      (explanation "User intent captured in TOML; all constraint generation is deterministic and reproducible"))
-    (principle "Formally verified bridges"
-      (explanation "Idris2 dependent types prove interface correctness at compile time"))))
+[maintenance-axes]
+scoping-first = true
+axis-1 = "must > intend > like"
+axis-2 = "corrective > adaptive > perfective"
+axis-3 = "systems > compliance > effects"

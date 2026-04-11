@@ -1,48 +1,20 @@
-;; SPDX-License-Identifier: PMPL-1.0-or-later
-;; Copyright (c) 2026 Jonathan D.A. Jewell (hyperpolymath) <j.d.a.jewell@open.ac.uk>
-;; ECOSYSTEM.a2ml — Ecosystem position for phronesiser
+# SPDX-License-Identifier: PMPL-1.0-or-later
+# Copyright (c) 2026 Jonathan D.A. Jewell (hyperpolymath) <j.d.a.jewell@open.ac.uk>
+#
+# ECOSYSTEM.a2ml — Phronesiser ecosystem position
+[metadata]
+version = "0.1.0"
+last-updated = "2026-04-11"
 
-(ecosystem
-  (version "0.1.0")
-  (name "phronesiser")
-  (type "tool")
-  (purpose "Add provably safe ethical constraints to AI agents via Phronesis deontic logic")
+[project]
+name = "Phronesiser"
+purpose = "Add provably safe ethical constraints to AI agents via Phronesis deontic logic"
+role = "tool"
 
-  (position-in-ecosystem
-    (family "-iser acceleration frameworks")
-    (meta-framework "iseriser")
-    (relationship "sibling")
-    (domain "AI safety and ethics — deontic constraint enforcement")
-    (unique-value "Only -iser that provides formal ethical guarantees via deontic logic proofs"))
+[position-in-ecosystem]
+category = ""
 
-  (related-projects
-    (project "iseriser"
-      (relationship "meta-framework")
-      (description "Generates new -iser project scaffolding"))
-    (project "typedqliser"
-      (relationship "sibling-priority-1")
-      (description "Formal type safety for any query language"))
-    (project "chapeliser"
-      (relationship "sibling-priority-2")
-      (description "Chapel distributed computing acceleration"))
-    (project "verisimiser"
-      (relationship "sibling-priority-3")
-      (description "VeriSimDB octad database augmentation"))
-    (project "phronesis"
-      (relationship "upstream-language")
-      (description "Nextgen language for ethical reasoning on the BEAM VM — phronesiser makes it accessible"))
-    (project "proven"
-      (relationship "dependency")
-      (description "Shared Idris2 verified library — may share deontic logic proof modules"))
-    (project "typell"
-      (relationship "dependency")
-      (description "Type theory engine"))
-    (project "boj-server"
-      (relationship "integration-target")
-      (description "MCP server — phronesiser cartridge for constraint management"))
-    (project "verisimdb"
-      (relationship "integration-target")
-      (description "Backing store for audit trail persistence"))
-    (project "panll"
-      (relationship "integration-target")
-      (description "Panel framework — constraint visualisation and editing panels"))))
+[related-projects]
+projects = [
+  # No related projects recorded
+]
