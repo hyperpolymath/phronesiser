@@ -45,7 +45,7 @@ pub fn generate_all(manifest: &Manifest, output_dir: &str) -> Result<()> {
     let config_path = format!("{}/engine_config.json", output_dir);
     fs::write(
         &config_path,
-        serde_json::to_string_pretty(&engine_config).unwrap(),
+        serde_json::to_string_pretty(&engine_config).expect("TODO: handle error"),
     )
     .with_context(|| format!("Failed to write {}", config_path))?;
     println!("  [codegen] Wrote {}", config_path);

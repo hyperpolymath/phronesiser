@@ -534,7 +534,7 @@ audit-log = true
 name = "demo-bot"
 capabilities = ["chat", "search"]
 "#;
-        let m: Manifest = toml::from_str(toml_str).unwrap();
+        let m: Manifest = toml::from_str(toml_str).expect("TODO: handle error");
         assert_eq!(m.project.name, "ethics-demo");
         assert_eq!(m.constraints.len(), 1);
         assert_eq!(m.constraints[0].kind, ConstraintKind::Prohibition);

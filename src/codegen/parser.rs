@@ -142,7 +142,7 @@ mod tests {
                 priority: 99,
             },
         ]);
-        let parsed = parse_constraints(&m).unwrap();
+        let parsed = parse_constraints(&m).expect("TODO: handle error");
         assert_eq!(parsed.constraints[0].name, "high");
         assert_eq!(parsed.constraints[1].name, "low");
     }

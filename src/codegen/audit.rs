@@ -189,7 +189,7 @@ mod tests {
         let mut trail = AuditTrail::new(true);
         trail.record(sample_result(AuditDecision::Permitted));
         trail.record(sample_result(AuditDecision::Denied));
-        let json = trail.to_json().unwrap();
+        let json = trail.to_json().expect("TODO: handle error");
         assert!(json.contains("Permitted"));
         assert!(json.contains("Denied"));
     }
@@ -212,10 +212,10 @@ mod tests {
     fn test_write_json_to_tempfile() {
         let mut trail = AuditTrail::new(true);
         trail.record(sample_result(AuditDecision::Permitted));
-        let dir = tempfile::tempdir().unwrap();
+        let dir = tempfile::tempdir().expect("TODO: handle error");
         let path = dir.path().join("audit.json");
-        trail.write_json(path.to_str().unwrap()).unwrap();
-        let content = std::fs::read_to_string(&path).unwrap();
+        trail.write_json(path.to_str().expect("TODO: handle error")).expect("TODO: handle error");
+        let content = std::fs::read_to_string(&path).expect("TODO: handle error");
         assert!(content.contains("Permitted"));
     }
 }
