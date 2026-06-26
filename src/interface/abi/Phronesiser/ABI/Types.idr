@@ -15,6 +15,7 @@ module Phronesiser.ABI.Types
 import Data.Bits
 import Data.So
 import Data.Vect
+import Decidable.Equality
 
 %default total
 
@@ -26,14 +27,12 @@ import Data.Vect
 public export
 data Platform = Linux | Windows | MacOS | BSD | WASM
 
-||| Compile-time platform detection
-||| This will be set during compilation based on target
+||| The platform this build targets. Defaults to Linux; the Rust/Zig build
+||| layer overrides this via codegen target selection. (Previously a
+||| `%runElab` stub that required ElabReflection and did not compile.)
 public export
 thisPlatform : Platform
-thisPlatform =
-  %runElab do
-    -- Platform detection logic
-    pure Linux  -- Default, override with compiler flags
+thisPlatform = Linux
 
 --------------------------------------------------------------------------------
 -- FFI Result Codes
@@ -70,6 +69,8 @@ resultToInt ConstraintViolation = 5
 resultToInt ConstraintConflict = 6
 
 ||| Results are decidably equal
+||| The off-diagonal cases discharge disequality explicitly; the previous
+||| `decEq _ _ = No absurd` did not compile (no `Uninhabited (x = y)`).
 public export
 DecEq Result where
   decEq Ok Ok = Yes Refl
@@ -79,7 +80,48 @@ DecEq Result where
   decEq NullPointer NullPointer = Yes Refl
   decEq ConstraintViolation ConstraintViolation = Yes Refl
   decEq ConstraintConflict ConstraintConflict = Yes Refl
-  decEq _ _ = No absurd
+  decEq Ok Error = No (\case Refl impossible)
+  decEq Ok InvalidParam = No (\case Refl impossible)
+  decEq Ok OutOfMemory = No (\case Refl impossible)
+  decEq Ok NullPointer = No (\case Refl impossible)
+  decEq Ok ConstraintViolation = No (\case Refl impossible)
+  decEq Ok ConstraintConflict = No (\case Refl impossible)
+  decEq Error Ok = No (\case Refl impossible)
+  decEq Error InvalidParam = No (\case Refl impossible)
+  decEq Error OutOfMemory = No (\case Refl impossible)
+  decEq Error NullPointer = No (\case Refl impossible)
+  decEq Error ConstraintViolation = No (\case Refl impossible)
+  decEq Error ConstraintConflict = No (\case Refl impossible)
+  decEq InvalidParam Ok = No (\case Refl impossible)
+  decEq InvalidParam Error = No (\case Refl impossible)
+  decEq InvalidParam OutOfMemory = No (\case Refl impossible)
+  decEq InvalidParam NullPointer = No (\case Refl impossible)
+  decEq InvalidParam ConstraintViolation = No (\case Refl impossible)
+  decEq InvalidParam ConstraintConflict = No (\case Refl impossible)
+  decEq OutOfMemory Ok = No (\case Refl impossible)
+  decEq OutOfMemory Error = No (\case Refl impossible)
+  decEq OutOfMemory InvalidParam = No (\case Refl impossible)
+  decEq OutOfMemory NullPointer = No (\case Refl impossible)
+  decEq OutOfMemory ConstraintViolation = No (\case Refl impossible)
+  decEq OutOfMemory ConstraintConflict = No (\case Refl impossible)
+  decEq NullPointer Ok = No (\case Refl impossible)
+  decEq NullPointer Error = No (\case Refl impossible)
+  decEq NullPointer InvalidParam = No (\case Refl impossible)
+  decEq NullPointer OutOfMemory = No (\case Refl impossible)
+  decEq NullPointer ConstraintViolation = No (\case Refl impossible)
+  decEq NullPointer ConstraintConflict = No (\case Refl impossible)
+  decEq ConstraintViolation Ok = No (\case Refl impossible)
+  decEq ConstraintViolation Error = No (\case Refl impossible)
+  decEq ConstraintViolation InvalidParam = No (\case Refl impossible)
+  decEq ConstraintViolation OutOfMemory = No (\case Refl impossible)
+  decEq ConstraintViolation NullPointer = No (\case Refl impossible)
+  decEq ConstraintViolation ConstraintConflict = No (\case Refl impossible)
+  decEq ConstraintConflict Ok = No (\case Refl impossible)
+  decEq ConstraintConflict Error = No (\case Refl impossible)
+  decEq ConstraintConflict InvalidParam = No (\case Refl impossible)
+  decEq ConstraintConflict OutOfMemory = No (\case Refl impossible)
+  decEq ConstraintConflict NullPointer = No (\case Refl impossible)
+  decEq ConstraintConflict ConstraintViolation = No (\case Refl impossible)
 
 --------------------------------------------------------------------------------
 -- Deontic Modality
@@ -116,7 +158,12 @@ DecEq DeonticModality where
   decEq Obligation Obligation = Yes Refl
   decEq Permission Permission = Yes Refl
   decEq Prohibition Prohibition = Yes Refl
-  decEq _ _ = No absurd
+  decEq Obligation Permission = No (\case Refl impossible)
+  decEq Obligation Prohibition = No (\case Refl impossible)
+  decEq Permission Obligation = No (\case Refl impossible)
+  decEq Permission Prohibition = No (\case Refl impossible)
+  decEq Prohibition Obligation = No (\case Refl impossible)
+  decEq Prohibition Permission = No (\case Refl impossible)
 
 ||| Proof that obligation and prohibition are contradictory.
 ||| An action cannot be both obligatory and prohibited.
@@ -165,7 +212,26 @@ DecEq HarmSeverity where
   decEq Moderate Moderate = Yes Refl
   decEq Severe Severe = Yes Refl
   decEq Critical Critical = Yes Refl
-  decEq _ _ = No absurd
+  decEq Negligible Minor = No (\case Refl impossible)
+  decEq Negligible Moderate = No (\case Refl impossible)
+  decEq Negligible Severe = No (\case Refl impossible)
+  decEq Negligible Critical = No (\case Refl impossible)
+  decEq Minor Negligible = No (\case Refl impossible)
+  decEq Minor Moderate = No (\case Refl impossible)
+  decEq Minor Severe = No (\case Refl impossible)
+  decEq Minor Critical = No (\case Refl impossible)
+  decEq Moderate Negligible = No (\case Refl impossible)
+  decEq Moderate Minor = No (\case Refl impossible)
+  decEq Moderate Severe = No (\case Refl impossible)
+  decEq Moderate Critical = No (\case Refl impossible)
+  decEq Severe Negligible = No (\case Refl impossible)
+  decEq Severe Minor = No (\case Refl impossible)
+  decEq Severe Moderate = No (\case Refl impossible)
+  decEq Severe Critical = No (\case Refl impossible)
+  decEq Critical Negligible = No (\case Refl impossible)
+  decEq Critical Minor = No (\case Refl impossible)
+  decEq Critical Moderate = No (\case Refl impossible)
+  decEq Critical Severe = No (\case Refl impossible)
 
 --------------------------------------------------------------------------------
 -- Harm Domain
@@ -322,12 +388,15 @@ public export
 data Handle : Type where
   MkHandle : (ptr : Bits64) -> {auto 0 nonNull : So (ptr /= 0)} -> Handle
 
-||| Safely create a handle from a pointer value
-||| Returns Nothing if pointer is null
+||| Safely create a handle from a pointer value. Uses `choose` to obtain a
+||| real `So (ptr /= 0)` witness for the non-null branch. (Previously
+||| `Just (MkHandle ptr)` left the `auto` proof unsolved and did not compile.)
 public export
 createHandle : Bits64 -> Maybe Handle
-createHandle 0 = Nothing
-createHandle ptr = Just (MkHandle ptr)
+createHandle ptr =
+  case choose (ptr /= 0) of
+    Left ok => Just (MkHandle ptr {nonNull = ok})
+    Right _ => Nothing
 
 ||| Extract pointer value from handle
 public export
@@ -365,50 +434,20 @@ ptrSize MacOS = 64
 ptrSize BSD = 64
 ptrSize WASM = 32
 
-||| Pointer type for platform
-public export
-CPtr : Platform -> Type -> Type
-CPtr p _ = Bits (ptrSize p)
-
---------------------------------------------------------------------------------
--- Memory Layout Proofs
---------------------------------------------------------------------------------
-
-||| Proof that a type has a specific size
-public export
-data HasSize : Type -> Nat -> Type where
-  SizeProof : {0 t : Type} -> {n : Nat} -> HasSize t n
-
-||| Proof that a type has a specific alignment
-public export
-data HasAlignment : Type -> Nat -> Type where
-  AlignProof : {0 t : Type} -> {n : Nat} -> HasAlignment t n
-
-||| Size of C types (platform-specific)
-public export
-cSizeOf : (p : Platform) -> (t : Type) -> Nat
-cSizeOf p (CInt _) = 4
-cSizeOf p (CSize _) = if ptrSize p == 64 then 8 else 4
-cSizeOf p Bits32 = 4
-cSizeOf p Bits64 = 8
-cSizeOf p Double = 8
-cSizeOf p _ = ptrSize p `div` 8
-
-||| Alignment of C types (platform-specific)
-public export
-cAlignOf : (p : Platform) -> (t : Type) -> Nat
-cAlignOf p (CInt _) = 4
-cAlignOf p (CSize _) = if ptrSize p == 64 then 8 else 4
-cAlignOf p Bits32 = 4
-cAlignOf p Bits64 = 8
-cAlignOf p Double = 8
-cAlignOf p _ = ptrSize p `div` 8
-
 --------------------------------------------------------------------------------
 -- Constraint Evaluation Structs
 --------------------------------------------------------------------------------
+--
+-- The earlier template carried `CPtr`, `cSizeOf`/`cAlignOf` (which matched on
+-- the *type-level* functions `CInt`/`CSize` — illegal as constructor patterns)
+-- and vacuous `HasSize`/`HasAlignment` proofs (their single constructor proved
+-- nothing for any `n`). Those did not compile and were unsound. The genuine,
+-- machine-checked size/alignment guarantees for these structs live in
+-- `Phronesiser.ABI.Layout` / `Phronesiser.ABI.Proofs` as `Divides`-backed
+-- `CABICompliant` witnesses over the field offsets.
 
-||| C-compatible struct for passing an ethical constraint across FFI
+||| C-compatible struct for passing an ethical constraint across FFI.
+||| 16 bytes: constraintId(0) modality(4) harmDomain(8) harmThreshold(12).
 public export
 record ConstraintStruct where
   constructor MkConstraintStruct
@@ -417,17 +456,8 @@ record ConstraintStruct where
   harmDomain   : Bits32   -- 4 bytes, offset 8  (HarmDomain as int, 0xFF = none)
   harmThreshold : Bits32  -- 4 bytes, offset 12 (HarmSeverity as int)
 
-||| Prove the constraint struct has correct size (16 bytes, no padding needed)
-public export
-constraintStructSize : (p : Platform) -> HasSize ConstraintStruct 16
-constraintStructSize p = SizeProof
-
-||| Prove the constraint struct has correct alignment (4 bytes)
-public export
-constraintStructAlign : (p : Platform) -> HasAlignment ConstraintStruct 4
-constraintStructAlign p = AlignProof
-
-||| C-compatible struct for an audit decision result
+||| C-compatible struct for an audit decision result.
+||| 16 bytes: constraintId(0) decision(4) severity(8) reserved(12).
 public export
 record AuditResultStruct where
   constructor MkAuditResultStruct
@@ -435,11 +465,6 @@ record AuditResultStruct where
   decision     : Bits32   -- 4 bytes, offset 4  (0=permitted, 1=denied, 2=escalated)
   severity     : Bits32   -- 4 bytes, offset 8  (HarmSeverity as int)
   reserved     : Bits32   -- 4 bytes, offset 12 (padding for alignment)
-
-||| Prove the audit result struct has correct size (16 bytes)
-public export
-auditResultStructSize : (p : Platform) -> HasSize AuditResultStruct 16
-auditResultStructSize p = SizeProof
 
 --------------------------------------------------------------------------------
 -- Verification
