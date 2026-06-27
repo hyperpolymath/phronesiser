@@ -9,3 +9,4 @@ modules = Phronesiser.ABI.Types
         , Phronesiser.ABI.Layout
         , Phronesiser.ABI.Foreign
         , Phronesiser.ABI.Proofs
+        , Phronesiser.ABI.Semantics
