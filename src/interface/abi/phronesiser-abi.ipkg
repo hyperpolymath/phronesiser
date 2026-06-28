@@ -12,3 +12,4 @@ modules = Phronesiser.ABI.Types
         , Phronesiser.ABI.Semantics
         , Phronesiser.ABI.Invariants
         , Phronesiser.ABI.FfiSeam
+        , Phronesiser.ABI.Capstone
