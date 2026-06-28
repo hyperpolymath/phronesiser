@@ -11,3 +11,4 @@ modules = Phronesiser.ABI.Types
         , Phronesiser.ABI.Proofs
         , Phronesiser.ABI.Semantics
         , Phronesiser.ABI.Invariants
+        , Phronesiser.ABI.FfiSeam
