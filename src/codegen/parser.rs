@@ -49,7 +49,7 @@ pub fn parse_constraints(manifest: &Manifest) -> Result<ParsedConstraintSet> {
     detect_contradictions(&constraints)?;
 
     // Sort by descending priority for deterministic evaluation.
-    constraints.sort_by(|a, b| b.priority.cmp(&a.priority));
+    constraints.sort_by_key(|b| std::cmp::Reverse(b.priority));
 
     Ok(ParsedConstraintSet {
         constraints,

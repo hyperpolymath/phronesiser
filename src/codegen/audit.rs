@@ -214,7 +214,9 @@ mod tests {
         trail.record(sample_result(AuditDecision::Permitted));
         let dir = tempfile::tempdir().expect("TODO: handle error");
         let path = dir.path().join("audit.json");
-        trail.write_json(path.to_str().expect("TODO: handle error")).expect("TODO: handle error");
+        trail
+            .write_json(path.to_str().expect("TODO: handle error"))
+            .expect("TODO: handle error");
         let content = std::fs::read_to_string(&path).expect("TODO: handle error");
         assert!(content.contains("Permitted"));
     }
