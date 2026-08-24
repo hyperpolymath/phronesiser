@@ -1,16 +1,15 @@
-<!-- SPDX-License-Identifier: CC-BY-SA-4.0 -->
-<!-- Copyright (c) 2026 Jonathan D.A. Jewell (hyperpolymath) <j.d.a.jewell@open.ac.uk> -->
-# TOPOLOGY.md — Phronesiser
+== TOPOLOGY.md — Phronesiser
 
-## Purpose
+=== Purpose
 
-Phronesiser adds provably safe ethical constraints to AI agent decision-making
-via Phronesis deontic logic. It compiles agent behaviour specifications into
-formally verified constraint sets enforced at runtime with full audit trails.
+Phronesiser adds provably safe ethical constraints to AI agent
+decision-making via Phronesis deontic logic. It compiles agent behaviour
+specifications into formally verified constraint sets enforced at
+runtime with full audit trails.
 
-## Module Map
+=== Module Map
 
-```
+....
 phronesiser/
 ├── src/
 │   ├── main.rs                    # CLI entry point (clap subcommands)
@@ -63,11 +62,11 @@ phronesiser/
 ├── Justfile                       # Task runner
 ├── Containerfile                  # OCI build (Chainguard base)
 └── LICENSE                        # MPL-2.0
-```
+....
 
-## Data Flow
+=== Data Flow
 
-```
+....
 phronesiser.toml          User defines constraints (deontic rules, value hierarchies,
         │                 harm prevention boundaries)
         ▼
@@ -88,27 +87,37 @@ phronesiser.toml          User defines constraints (deontic rules, value hierarc
         ▼
   Audit Trail             Structured logs: permitted/denied/escalated
                           with formal justification
-```
+....
 
-## Key Types (Idris2 ABI)
+=== Key Types (Idris2 ABI)
 
-| Type | Purpose |
-|------|---------|
-| `DeonticModality` | Obligation, Permission, Prohibition |
-| `EthicalConstraint` | Named constraint with modality, scope, and formal proposition |
-| `ValueAlignment` | Partially ordered value hierarchy |
-| `HarmPrevention` | Severity-classified harm boundary |
-| `AuditDecision` | Decidable proof: Permitted, Denied, or Escalated |
-| `ConstraintSet` | Composable collection of ethical constraints |
+[width="100%",cols="40%,60%",options="header",]
+|===
+|Type |Purpose
+|`+DeonticModality+` |Obligation, Permission, Prohibition
 
-## Integration Points
+|`+EthicalConstraint+` |Named constraint with modality, scope, and
+formal proposition
 
-| System | Relationship |
-|--------|-------------|
-| **iseriser** | Meta-framework; generates -iser scaffolding |
-| **proven** | Shared Idris2 verified library |
-| **typell** | Type theory engine |
-| **PanLL** | Constraint visualisation panels |
-| **BoJ-server** | Constraint management cartridge |
-| **VeriSimDB** | Audit trail backing store |
-| **Hypatia** | Neurosymbolic CI/CD scanning |
+|`+ValueAlignment+` |Partially ordered value hierarchy
+
+|`+HarmPrevention+` |Severity-classified harm boundary
+
+|`+AuditDecision+` |Decidable proof: Permitted, Denied, or Escalated
+
+|`+ConstraintSet+` |Composable collection of ethical constraints
+|===
+
+=== Integration Points
+
+[cols=",",options="header",]
+|===
+|System |Relationship
+|*iseriser* |Meta-framework; generates -iser scaffolding
+|*proven* |Shared Idris2 verified library
+|*typell* |Type theory engine
+|*PanLL* |Constraint visualisation panels
+|*BoJ-server* |Constraint management cartridge
+|*VeriSimDB* |Audit trail backing store
+|*Hypatia* |Neurosymbolic CI/CD scanning
+|===
